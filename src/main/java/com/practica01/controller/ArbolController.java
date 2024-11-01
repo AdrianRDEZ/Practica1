@@ -1,7 +1,7 @@
 package com.practica01.controller;
 
-import com.practica01.domain.Producto;
-import com.practica01.services.ProductoService;
+import com.practica01.domain.Arbol;
+import com.practica01.services.ArbolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,13 +16,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class ArbolController {
 
     @Autowired
-    private ProductoService arbolService;
+    private ArbolService arbolService;
 
     @GetMapping("/listado")
     public String listado(Model model) { //DEVUELVE LA PAGINA HTML QUE QUIERO QUE SE VEA
-        var lista = arbolService.getProductos(false);
+        var lista = arbolService.getArbols(false);
         model.addAttribute("arbols", lista);
-        model.addAttribute("totalProductos", lista.size());
+        model.addAttribute("totalArbols", lista.size());
 
         return "/arbol/listado"; //esto no es la ruta del browser, retorna el folder llamado arbol y el archivo listado (templates)
     }
@@ -30,7 +30,7 @@ public class ArbolController {
    //cambue esto
 
     @PostMapping("/guardar")
-    public String arbolGuardar(Producto arbol,
+    public String arbolGuardar(Arbol arbol,
             @RequestParam("imagenFile") MultipartFile imagenFile) {
         if (!imagenFile.isEmpty()) {
             arbol.setRutaImagen("ruta/local/de/imagen/" + imagenFile.getOriginalFilename());
@@ -39,15 +39,15 @@ public class ArbolController {
         return "redirect:/arbol/listado";
     }
 
-    @GetMapping("/eliminar/{idProducto}")
-    public String arbolEliminar(Producto arbol) {
+    @GetMapping("/eliminar/{id}")
+    public String arbolEliminar(Arbol arbol) {
         arbolService.delete(arbol);
         return "redirect:/arbol/listado";
     }
 
-    @GetMapping("/modificar/{idProducto}")
-    public String arbolModificar(Producto arbol, Model model) {
-        arbol = arbolService.getProducto(arbol);
+    @GetMapping("/modificar/{id}")
+    public String arbolModificar(Arbol arbol, Model model) {
+        arbol = arbolService.getArbol(arbol);
         model.addAttribute("arbol", arbol);
         return "/arbol/modifica";
     }
