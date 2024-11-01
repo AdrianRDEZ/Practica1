@@ -12,43 +12,43 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@RequestMapping("/producto")//en esta clase se  mapean rutas con "producto"
-public class ProductoController {
+@RequestMapping("/arbol")//en esta clase se  mapean rutas con "arbol"
+public class ArbolController {
 
     @Autowired
-    private ProductoService productoService;
+    private ProductoService arbolService;
 
     @GetMapping("/listado")
     public String listado(Model model) { //DEVUELVE LA PAGINA HTML QUE QUIERO QUE SE VEA
-        var lista = productoService.getProductos(false);
-        model.addAttribute("productos", lista);
+        var lista = arbolService.getProductos(false);
+        model.addAttribute("arbols", lista);
         model.addAttribute("totalProductos", lista.size());
 
-        return "/producto/listado"; //esto no es la ruta del browser, retorna el folder llamado producto y el archivo listado (templates)
+        return "/arbol/listado"; //esto no es la ruta del browser, retorna el folder llamado arbol y el archivo listado (templates)
     }
 
    //cambue esto
 
     @PostMapping("/guardar")
-    public String productoGuardar(Producto producto,
+    public String arbolGuardar(Producto arbol,
             @RequestParam("imagenFile") MultipartFile imagenFile) {
         if (!imagenFile.isEmpty()) {
-            producto.setRutaImagen("ruta/local/de/imagen/" + imagenFile.getOriginalFilename());
+            arbol.setRutaImagen("ruta/local/de/imagen/" + imagenFile.getOriginalFilename());
         }
-        productoService.save(producto);
-        return "redirect:/producto/listado";
+        arbolService.save(arbol);
+        return "redirect:/arbol/listado";
     }
 
     @GetMapping("/eliminar/{idProducto}")
-    public String productoEliminar(Producto producto) {
-        productoService.delete(producto);
-        return "redirect:/producto/listado";
+    public String arbolEliminar(Producto arbol) {
+        arbolService.delete(arbol);
+        return "redirect:/arbol/listado";
     }
 
     @GetMapping("/modificar/{idProducto}")
-    public String productoModificar(Producto producto, Model model) {
-        producto = productoService.getProducto(producto);
-        model.addAttribute("producto", producto);
-        return "/producto/modifica";
+    public String arbolModificar(Producto arbol, Model model) {
+        arbol = arbolService.getProducto(arbol);
+        model.addAttribute("arbol", arbol);
+        return "/arbol/modifica";
     }
 }
